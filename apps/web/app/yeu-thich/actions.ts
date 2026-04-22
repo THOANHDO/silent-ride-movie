@@ -16,6 +16,7 @@ export async function toggleFavorite(profileId: string, movieData: FavoriteInput
   }
   
   const supabase = await createServerSupabaseClient()
+  if (!supabase) return { error: 'Database not configured' }
 
   // Verify profile exists
   const { data: profile } = await supabase
@@ -73,6 +74,7 @@ export async function toggleFavorite(profileId: string, movieData: FavoriteInput
 export async function clearAllFavorites(profileId: string) {
   if (!profileId) return { error: 'Vui lòng chọn Profile' }
   const supabase = await createServerSupabaseClient()
+  if (!supabase) return { error: 'Database not configured' }
 
   const { error } = await supabase
     .from('sr_favorites')
@@ -88,6 +90,7 @@ export async function clearAllFavorites(profileId: string) {
 export async function getFavorites(profileId: string) {
     if (!profileId) return []
     const supabase = await createServerSupabaseClient()
+    if (!supabase) return []
 
     const { data } = await supabase
         .from('sr_favorites')
@@ -101,6 +104,7 @@ export async function getFavorites(profileId: string) {
 export async function getFavoriteSlugs(profileId: string) {
   if (!profileId) return []
   const supabase = await createServerSupabaseClient()
+  if (!supabase) return []
 
   const { data } = await supabase
     .from('sr_favorites')

@@ -98,19 +98,42 @@ Mở [http://localhost:3000](http://localhost:3000)
 
 ## Deploy lên Vercel
 
-### Cách 1: Tự động qua Github
-1. Push code lên GitHub
-2. Vào [vercel.com/new](https://vercel.com/new) → Import repository
-3. Đặt **Root Directory** là `apps/web`
-4. Cấu hình Env: Nếu bạn có dùng Supabase, nhớ nhập `NEXT_PUBLIC_SUPABASE_URL` và `NEXT_PUBLIC_SUPABASE_ANON_KEY` trong phần Environment Variables.
-5. Nhấn **Deploy**
+Hướng dẫn chi tiết cách deploy hoàn toàn bằng dòng lệnh (CLI):
 
-### Cách 2: Vercel CLI
+### 1. Chuẩn bị tài khoản
+Tạo tài khoản tại [Vercel](https://vercel.com). Sau đó cài Vercel CLI nếu chưa có:
 ```bash
 npm i -g vercel
-vercel
-# Chọn root directory là apps/web
 ```
+
+### 2. Khởi tạo dự án
+Chạy lệnh gốc kết nối:
+```bash
+vercel --prod
+```
+> **Bắt buộc tuân thủ** các câu trả lời sau để web nhận dạng đúng cấu trúc Monorepo:
+> - `? Set up and deploy...` ➔ Ấn **Y**
+> - `? Which scope...` ➔ Ấn **Enter**
+> - `? Link to existing project?` ➔ Nhập **n**
+> - `? What’s your project’s name?` ➔ Đặt tên web của bạn (vd: `silent-ride`) và **Enter**
+> - `? In which directory is your code located? ./` ➔ 🚨 **HÃY XÓA CHỮ `./` BẰNG PHÍM BACKSPACE, SAU ĐÓ GÕ VÀO `apps/web`** rồi ấn **Enter**.
+
+### 3. Cấu hình Database & Cập nhật lại (Nếu có sử dụng Supabase)
+Nếu bạn muốn lưu thông tin Yêu thích / Lịch sử xem phim:
+1. Đăng ký tài khoản [Supabase](https://supabase.com), tạo dự án và lấy **Project URL** cùng **Anon Key**.
+2. Chạy đoạn Script SQL trong file [`packages/database/migrations/20260317_movie_management.sql`](packages/database/migrations/20260317_movie_management.sql) trên màn hình SQL của Supabase Dashboard.
+3. Thiết lập trực tiếp biến môi trường cho Vercel thông qua Terminal:
+   ```bash
+   vercel env add NEXT_PUBLIC_SUPABASE_URL production
+   # Khi hệ thống hỏi Value, copy dán đường link URL của bạn vào
+   
+   vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
+   # Khi hệ thống hỏi Value, copy dán chuỗi Anon Key vào
+   ```
+4. Cập nhật lại sản phẩm cuối cùng sau khi đã nạp biến môi trường:
+   ```bash
+   vercel --prod
+   ```
 
 ---
 
